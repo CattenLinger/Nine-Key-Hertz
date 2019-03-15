@@ -7,11 +7,21 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/windowNameLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:text="Window"
+        android:textColor="@color/colorAccent" />
+
+    <TextView
         android:id="@+id/messageLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="3dp"
+        android:layout_margin="3dp"
+        android:padding="0dp"
         android:text="@string/hertz_window_default"
         android:textColor="@color/hertz_float_window_text"
         android:typeface="normal" />
+
 </LinearLayout>

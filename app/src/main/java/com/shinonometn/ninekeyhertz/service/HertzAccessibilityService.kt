@@ -19,7 +19,7 @@ class HertzAccessibilityService : AccessibilityService() {
     * Handle the working service
     *
     * */
-    private lateinit var workingService: HertzWorkingService
+    private var workingService: HertzWorkingService? = null
     private var isWorkingServiceBound = false
 
     private val workingServiceConnection = object : ServiceConnection {
@@ -36,7 +36,7 @@ class HertzAccessibilityService : AccessibilityService() {
     }
 
     private fun onWorkingServiceUnbind() {
-        Log.d(TAG, "Working service bound.")
+        Log.d(TAG, "Working service unbound.")
     }
 
     /*
@@ -50,28 +50,34 @@ class HertzAccessibilityService : AccessibilityService() {
         Intent(this, HertzWorkingService::class.java).also {
             bindService(it, workingServiceConnection, Context.BIND_AUTO_CREATE)
         }
+
     }
 
     override fun onServiceConnected() {
         Log.d(TAG, "Connected to Accessibility service.")
+        workingService?.onAccessibilityServiceStatus(AccessibilityServiceStatus.CONNECTED)
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
         Log.d(TAG, "Accessibility service unbind.")
+        workingService?.onAccessibilityServiceStatus(AccessibilityServiceStatus.UNBIND)
         return true
     }
 
     override fun onRebind(intent: Intent?) {
         Log.d(TAG, "Accessibility service bind.")
+        workingService?.onAccessibilityServiceStatus(AccessibilityServiceStatus.REBIND)
     }
 
     override fun onInterrupt() {
         Log.d(TAG, "Accessibility service interrupted.")
+        workingService?.onAccessibilityServiceStatus(AccessibilityServiceStatus.INTERRUPT)
     }
 
     override fun onDestroy() {
-        Log.d(TAG, "Accessibility service destroyed.")
+        workingService?.onAccessibilityServiceStatus(AccessibilityServiceStatus.DESTROY)
         unbindService(workingServiceConnection)
+        Log.d(TAG, "Accessibility service destroyed.")
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -79,7 +85,7 @@ class HertzAccessibilityService : AccessibilityService() {
             Log.d(TAG, "Hertz wasn't here, message will be drop")
             return
         }
-        workingService.handleAccessibilityEvent(EventContext(event, this))
+        workingService?.handleAccessibilityEvent(EventContext(event, this))
     }
 
     /*

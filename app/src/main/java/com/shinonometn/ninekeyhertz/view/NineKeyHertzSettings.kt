@@ -18,7 +18,15 @@ class NineKeyHertzSettings : AppCompatActivity() {
         else
             getString(R.string.settings_hertz_off)
 
-        Log.d("HertzSetting","Open settings")
+        Log.d(TAG,"Open settings")
+        Log.d(TAG, "Files: (in ${filesDir.absolutePath}) \n ${StringBuilder().apply {
+            filesDir.list().forEach { append(" - ").append(it).append("\n") }
+        }}")
+
+    }
+
+    companion object {
+        private val TAG ="HertzSetting"
     }
 
 }
