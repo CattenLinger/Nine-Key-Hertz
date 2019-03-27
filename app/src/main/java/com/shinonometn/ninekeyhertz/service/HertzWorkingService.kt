@@ -18,6 +18,9 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import com.shinonometn.ninekeyhertz.R
 import com.shinonometn.ninekeyhertz.data.BasicSettings
+import com.shinonometn.ninekeyhertz.data.SettingFilesManager
+import com.shinonometn.ninekeyhertz.data.loadSettings
+import com.shinonometn.ninekeyhertz.data.saveToFile
 import com.shinonometn.ninekeyhertz.service.works.EventContext
 import com.shinonometn.ninekeyhertz.service.works.EventHandleWorks
 import com.shinonometn.ninekeyhertz.utils.EventMappings
@@ -45,7 +48,7 @@ class HertzWorkingService : Service() {
     private val binder = LocalBinder()
 
     override fun onCreate() {
-        hertzSettings = BasicSettings.loadFromJsonFile(this)
+        hertzSettings = SettingFilesManager.loadSettings(this, BasicSettings::class.java)
 
         applyFloatWindowSettings()
 
@@ -66,7 +69,8 @@ class HertzWorkingService : Service() {
 
     override fun onDestroy() {
         removeOverlayView(getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-        hertzSettings.saveToJsonFile(this)
+
+        hertzSettings.saveToFile(this)
 
         toast("Hertz stop working.")
         super.onDestroy()
@@ -178,6 +182,16 @@ class HertzWorkingService : Service() {
         // remove the view
         windowManager.removeView(focusHintView)
         focusHintView = null
+    }
+
+    private var findResultView: FrameLayout? = null
+    fun getFindResultView(): FrameLayout {
+        if (findResultView == null) findResultView = FrameLayout(this).apply {
+            LayoutInflater.from(this@HertzWorkingService)
+                    .inflate(R.layout.hertz_found_result_mask, this)
+        }
+
+        return findResultView!!
     }
 
     private fun toast(text: String) {

@@ -4,15 +4,13 @@ import android.content.Context
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.File
 
-class BasicSettings{
+class BasicSettings : NamedSettings{
+
+    override val name = "settings"
 
     var disableService: Boolean = false
     var showFloatWindow: Boolean = false
     var verboseToast : Boolean = true
-
-    fun saveToJsonFile(context: Context){
-        objectMapper.writeValue(File(context.filesDir,filename),this)
-    }
 
     companion object {
 

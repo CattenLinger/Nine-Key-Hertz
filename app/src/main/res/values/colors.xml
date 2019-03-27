@@ -5,4 +5,5 @@
     <color name="colorAccent">#d81b60</color>
     <color name="hertz_float_window_background">#98000000</color>
     <color name="hertz_float_window_text">#20ebd5</color>
+    <color name="hertz_found_window_background">#ffffff</color>
 </resources>

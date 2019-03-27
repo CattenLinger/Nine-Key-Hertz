@@ -2,6 +2,7 @@ package com.shinonometn.ninekeyhertz.service.works
 
 import android.annotation.SuppressLint
 import android.graphics.Rect
+import android.os.Build
 import android.os.Debug
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
@@ -11,7 +12,7 @@ import kotlinx.android.synthetic.main.hertz_float_window.view.*
 
 object EventHandleWorks {
 
-    const val TAG = "EventHandleWorks"
+    private const val TAG = "EventHandleWorks"
 
     private fun readTree(nodeInfo: AccessibilityNodeInfo?, level: Int): String {
         if (nodeInfo == null) return "Empty node info"
@@ -65,6 +66,11 @@ object EventHandleWorks {
             }
 
             AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    Log.d(TAG,String.format("[TYPE_WINDOW_CONTENT_CHANGED] ${event.className}: %08x ",event.contentChangeTypes))
+                    if(event.contentChangeTypes.and(AccessibilityEvent.CONTENT_CHANGE_TYPE_TEXT) == AccessibilityEvent.CONTENT_CHANGE_TYPE_TEXT) return
+                }
+
                 try {
                     val nodeInfo = event.source ?: return
 
@@ -80,17 +86,17 @@ object EventHandleWorks {
                     }.toString()
 
                     val childrenInfo = nodeWrapper.run {
-                        fun loadNodeInfo(wrapper: NodeWrapper, level: Int = 0) : String {
+                        fun loadNodeInfo(wrapper: NodeWrapper, level: Int = 0): String {
                             val sb = StringBuilder()
                             val childrenNodes = wrapper.childrenNodes
                             for (i in 0 until level) sb.append("  ")
-                            if(level != 0) sb.append("  |-") else sb.append("   ")
+                            if (level != 0) sb.append("  |-") else sb.append("   ")
                             sb.append(if (childrenNodes.isEmpty()) " * " else "[+]")
                             sb.append(wrapper.type).append(" ").append(readAreaInfo(wrapper.currentNode)).append("\n")
 
-                            if(!childrenNodes.isEmpty()) {
+                            if (!childrenNodes.isEmpty()) {
                                 childrenNodes.map {
-                                    sb.append(loadNodeInfo(it,level + 1))
+                                    sb.append(loadNodeInfo(it, level + 1))
                                 }
                             }
                             return sb.toString()
