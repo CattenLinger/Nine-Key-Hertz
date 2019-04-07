@@ -17,10 +17,7 @@ import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
 import android.widget.Toast
 import com.shinonometn.ninekeyhertz.R
-import com.shinonometn.ninekeyhertz.data.BasicSettings
-import com.shinonometn.ninekeyhertz.data.SettingFilesManager
-import com.shinonometn.ninekeyhertz.data.loadSettings
-import com.shinonometn.ninekeyhertz.data.saveToFile
+import com.shinonometn.ninekeyhertz.data.*
 import com.shinonometn.ninekeyhertz.service.works.EventContext
 import com.shinonometn.ninekeyhertz.service.works.EventHandleWorks
 import com.shinonometn.ninekeyhertz.utils.EventMappings
@@ -34,6 +31,7 @@ class HertzWorkingService : Service() {
     * */
 
     private lateinit var hertzSettings: BasicSettings
+    private lateinit var listenerSettings: ListenerSettings
 
     /*
     *
@@ -86,7 +84,8 @@ class HertzWorkingService : Service() {
     *
     * */
 
-    val eventFilter = arrayListOf(AccessibilityEvent.TYPE_VIEW_HOVER_ENTER, AccessibilityEvent.TYPE_VIEW_HOVER_EXIT)
+    private val eventFilter = listenerSettings.eventListenerTarget
+
     @SuppressLint("SetTextI18n")
     fun handleAccessibilityEvent(eventContext: EventContext) {
         if (hertzSettings.disableService) return
@@ -98,7 +97,7 @@ class HertzWorkingService : Service() {
             return
         }
 
-        if (eventFilter.contains(event.eventType)) return
+        if (eventFilter.contains(EventMappings.eventOf(event.eventType))) return
 
         Log.d(TAG, "Hertz got message: ${EventMappings.eventOf(event.eventType)} from ${event.className?.toString()}")
 

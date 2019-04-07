@@ -26,7 +26,7 @@ class NineKeyHertzSettings : AppCompatActivity() {
     }
 
     companion object {
-        private val TAG ="HertzSetting"
+        private const val TAG ="HertzSetting"
     }
 
 }

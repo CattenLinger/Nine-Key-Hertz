@@ -26,10 +26,13 @@ object EventMappings {
         TYPE_TOUCH_INTERACTION_END(""" Represents the event of the user ending to touch the screen.""".trimIndent(), 0x00200000),
         TYPE_WINDOWS_CHANGED(""" Represents the event change in the system windows shown on the screen. This event type should only be dispatched by the system.""".trimIndent(), 0x00400000),
         TYPE_VIEW_CONTEXT_CLICKED(""" Represents the event of a context click on a {@link android.view.View}.""".trimIndent(), 0x00800000),
-        TYPE_ASSIST_READING_CONTEXT(""" Represents the event of the assistant currently reading the users screen context.""".trimIndent(), 0x01000000)
+        TYPE_ASSIST_READING_CONTEXT(""" Represents the event of the assistant currently reading the users screen context.""".trimIndent(), 0x01000000),
+
+        UNKNOWN("""UNKNOWN TYPE""".trimIndent(), -1)
+
     }
 
     private val reverseMapping = Event.values().map { Pair(it.value,it) }.toMap()
 
-    fun eventOf(value : Int) : Event? = reverseMapping[value]
+    fun eventOf(value : Int) : Event = reverseMapping[value]?:Event.UNKNOWN
 }
