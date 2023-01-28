@@ -1,4 +1,4 @@
-package com.shinonometn.ninekeyhertz.utils
+package net.catten.ninekeyhertz.utils
 
 object EventMappings {
     enum class Event(val description: String, val value: Int) {
@@ -34,5 +34,5 @@ object EventMappings {
 
     private val reverseMapping = Event.values().map { Pair(it.value,it) }.toMap()
 
-    fun eventOf(value : Int) : Event = reverseMapping[value]?:Event.UNKNOWN
+    fun eventOf(value : Int) : Event = reverseMapping[value]?: Event.UNKNOWN
 }

@@ -1,4 +1,4 @@
-package com.shinonometn.ninekeyhertz.service.works
+package net.catten.ninekeyhertz.service.works
 
 import android.annotation.SuppressLint
 import android.graphics.Rect
@@ -7,8 +7,9 @@ import android.os.Debug
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import com.shinonometn.ninekeyhertz.node.NodeWrapper
-import kotlinx.android.synthetic.main.hertz_float_window.view.*
+import net.catten.ninekeyhertz.databinding.HertzFloatWindowBinding
+import net.catten.ninekeyhertz.node.NodeWrapper
+import net.catten.ninekeyhertz.utils.tryGetOrNull
 
 object EventHandleWorks {
 
@@ -58,11 +59,10 @@ object EventHandleWorks {
 
         Debug.waitForDebugger()
         when (event.eventType) {
-
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
-                eventContext.env?.focusHintView?.run {
-                    windowNameLabel.text = "C@WINSTAT: ${event.className}"
-                }
+                eventContext.env?.focusHintView
+                    ?.let { HertzFloatWindowBinding.bind(it).windowNameLabel }
+                    ?.apply { text = "C@WINSTAT: ${event.className}" }
             }
 
             AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> {
@@ -104,7 +104,8 @@ object EventHandleWorks {
                         loadNodeInfo(this)
                     }
 
-                    Log.d(TAG, StringBuilder()
+                    Log.d(
+                        TAG, StringBuilder()
                             .append("Component Tree Report (from package ${event.packageName}) : \n")
                             .append("Parents: \n")
                             .append("$parentInfo\n")
@@ -120,16 +121,13 @@ object EventHandleWorks {
 
             AccessibilityEvent.TYPE_VIEW_SELECTED,
             AccessibilityEvent.TYPE_VIEW_FOCUSED -> {
-                eventContext.env?.focusHintView?.let {
-                    val s = try {
-                        val bounds = Rect()
-                        event.source.getBoundsInScreen(bounds)
-                        "@[${bounds.left},${bounds.right},${bounds.top},${bounds.bottom}], Focused: ${event.source.className}"
-                    } catch (ignored: Throwable) {
-                        "unknown"
-                    }
-
-                    it.messageLabel.text = "Focused: $s"
+                eventContext.env?.focusHintView?.let(HertzFloatWindowBinding::bind)?.apply {
+                    messageLabel.text = "Focused: " + (tryGetOrNull {
+                        Rect().apply(event.source::getBoundsInScreen).let { bounds ->
+                            "@[${bounds.left},${bounds.right},${bounds.top},${bounds.bottom}], " +
+                                    "Focused: ${event.source.className}"
+                        }
+                    } ?: "unknown")
                 }
             }
 

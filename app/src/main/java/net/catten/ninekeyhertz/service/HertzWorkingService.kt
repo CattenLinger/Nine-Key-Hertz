@@ -1,4 +1,4 @@
-package com.shinonometn.ninekeyhertz.service
+package net.catten.ninekeyhertz.service
 
 import android.annotation.SuppressLint
 import android.app.Service
@@ -13,14 +13,13 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
-import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
 import android.widget.Toast
-import com.shinonometn.ninekeyhertz.R
-import com.shinonometn.ninekeyhertz.data.*
-import com.shinonometn.ninekeyhertz.service.works.EventContext
-import com.shinonometn.ninekeyhertz.service.works.EventHandleWorks
-import com.shinonometn.ninekeyhertz.utils.EventMappings
+import net.catten.ninekeyhertz.service.works.EventContext
+import net.catten.ninekeyhertz.service.works.EventHandleWorks
+import net.catten.ninekeyhertz.utils.EventMappings
+import net.catten.ninekeyhertz.R
+import net.catten.ninekeyhertz.data.*
 
 class HertzWorkingService : Service() {
 
@@ -30,8 +29,10 @@ class HertzWorkingService : Service() {
     *
     * */
 
-    private lateinit var hertzSettings: BasicSettings
-    private lateinit var listenerSettings: ListenerSettings
+    private val hertzSettings = BasicSettings()
+//    private val hertzSettings by lazy { SettingFilesManager.load<BasicSettings>(this) }
+    private val listenerSettings = ListenerSettings()
+//    private val listenerSettings by lazy { SettingFilesManager.load<ListenerSettings>(this) }
 
     /*
     *
@@ -46,20 +47,21 @@ class HertzWorkingService : Service() {
     private val binder = LocalBinder()
 
     override fun onCreate() {
-        hertzSettings = SettingFilesManager.loadSettings(this, BasicSettings::class.java)
 
         applyFloatWindowSettings()
 
-        if (hertzSettings.disableService)
-            toast("Hertz will waiting here until you allow it to work.")
-        else
-            toast("Hertz comes.")
+//        if (hertzSettings.disableService)
+//            toast("Hertz will waiting here until you allow it to work.")
+//        else
+//            toast("Hertz comes.")
+
+        toast("Hertz comes.")
 
         super.onCreate()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Debug.waitForDebugger()
+//        Debug.waitForDebugger()
 
         toast("Hertz start working.")
         return super.onStartCommand(intent, flags, startId)
@@ -74,7 +76,7 @@ class HertzWorkingService : Service() {
         super.onDestroy()
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
+    override fun onBind(intent: Intent?): IBinder {
         return binder
     }
 
@@ -84,7 +86,7 @@ class HertzWorkingService : Service() {
     *
     * */
 
-    private val eventFilter = listenerSettings.eventListenerTarget
+    private val eventFilter by lazy { listenerSettings.eventListenerTarget }
 
     @SuppressLint("SetTextI18n")
     fun handleAccessibilityEvent(eventContext: EventContext) {
@@ -99,7 +101,10 @@ class HertzWorkingService : Service() {
 
         if (eventFilter.contains(EventMappings.eventOf(event.eventType))) return
 
-        Log.d(TAG, "Hertz got message: ${EventMappings.eventOf(event.eventType)} from ${event.className?.toString()}")
+        Log.d(
+            TAG,
+            "Hertz got message: ${EventMappings.eventOf(event.eventType)} from ${event.className?.toString()}"
+        )
 
         EventHandleWorks.dispatchHandling(eventContext)
     }
@@ -147,8 +152,8 @@ class HertzWorkingService : Service() {
             WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
 
         flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                .or(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
-                .or(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH)
+            .or(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
+            .or(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH)
 
         format = PixelFormat.TRANSLUCENT
 
@@ -165,7 +170,7 @@ class HertzWorkingService : Service() {
             focusHintView = FrameLayout(this).apply {
                 // Load the view
                 LayoutInflater.from(this@HertzWorkingService)
-                        .inflate(R.layout.hertz_float_window, this)
+                    .inflate(R.layout.hertz_float_window, this)
             }
 
             // Add it to window manager
@@ -187,7 +192,7 @@ class HertzWorkingService : Service() {
     fun getFindResultView(): FrameLayout {
         if (findResultView == null) findResultView = FrameLayout(this).apply {
             LayoutInflater.from(this@HertzWorkingService)
-                    .inflate(R.layout.hertz_found_result_mask, this)
+                .inflate(R.layout.hertz_found_result_mask, this)
         }
 
         return findResultView!!

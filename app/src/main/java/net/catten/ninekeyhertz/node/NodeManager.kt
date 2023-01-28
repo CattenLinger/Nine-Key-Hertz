@@ -1,4 +1,4 @@
-package com.shinonometn.ninekeyhertz.node
+package net.catten.ninekeyhertz.node
 
 import java.util.concurrent.ConcurrentHashMap
 

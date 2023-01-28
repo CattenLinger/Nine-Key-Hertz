@@ -1,6 +1,6 @@
-package com.shinonometn.ninekeyhertz.data
+package net.catten.ninekeyhertz.data
 
-import com.shinonometn.ninekeyhertz.utils.EventMappings
+import net.catten.ninekeyhertz.utils.EventMappings
 
 class ListenerSettings : NamedSettings {
     override val name = "listeners"
@@ -14,6 +14,4 @@ class ListenerSettings : NamedSettings {
 
     val appList = HashSet<String>()
     var appListFilterMode = AppListFilterMode.NOT_WORKING
-
-
 }

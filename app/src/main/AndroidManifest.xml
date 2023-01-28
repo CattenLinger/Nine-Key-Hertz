@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.shinonometn.ninekeyhertz">
+    package="net.catten.ninekeyhertz">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
@@ -17,7 +17,7 @@
 
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".view.NineKeyHertzSettings">
+        <activity android:name="net.catten.ninekeyhertz.view.NineKeyHertzSettings" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -25,10 +25,10 @@
         </activity>
 
         <service
-            android:name=".service.HertzAccessibilityService"
+            android:name="net.catten.ninekeyhertz.service.HertzAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true"
             android:label="@string/app_name"
-
             android:configChanges="keyboardHidden">
 
             <intent-filter>
@@ -39,7 +39,7 @@
                 android:resource="@xml/nine_key_hertz_service_config"/>
         </service>
 
-        <service android:name=".service.HertzWorkingService"/>
+        <service android:name="net.catten.ninekeyhertz.service.HertzWorkingService"/>
 
     </application>
 </manifest>

@@ -1,4 +1,4 @@
-package com.shinonometn.ninekeyhertz.data
+package net.catten.ninekeyhertz.data
 
 import android.content.Context
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -7,16 +7,15 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.File
 
 object SettingFilesManager {
-
     // Configure the jackson json mapper here
     val jsonMapper = ObjectMapper()
-
-    private val clazzMapping = HashMap<String,Class<NamedSettings>>()
 }
 
-fun <T : NamedSettings> SettingFilesManager.loadSettings(context: Context, clazz: Class<T>): T {
-    val test = clazz.newInstance()
-    return jsonMapper.readerFor(object : TypeReference<T>() {}).readValue(File(context.filesDir, "${test.name}.json"))
+inline fun <reified T : NamedSettings> SettingFilesManager.load(context: Context): T {
+    val test = T::class.java.newInstance()
+    return File(context.filesDir, "${test.name}.json").takeIf { it.isFile }?.let {
+        jsonMapper.readerFor(object : TypeReference<T>() {}).readValue(it)
+    } ?: test
 }
 
 interface NamedSettings {

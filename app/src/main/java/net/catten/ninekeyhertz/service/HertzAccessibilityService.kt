@@ -1,4 +1,4 @@
-package com.shinonometn.ninekeyhertz.service
+package net.catten.ninekeyhertz.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.ComponentName
@@ -10,7 +10,8 @@ import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
-import com.shinonometn.ninekeyhertz.service.works.EventContext
+import net.catten.ninekeyhertz.R
+import net.catten.ninekeyhertz.service.works.EventContext
 
 class HertzAccessibilityService : AccessibilityService() {
 
@@ -105,7 +106,9 @@ class HertzAccessibilityService : AccessibilityService() {
         private const val TAG = "HertzAccessSrv"
 
         fun isAccessibilitySettingsOn(context: Context): Boolean {
-            val service = "com.shinonometn.ninekeyhertz/com.shinonometn.ninekeyhertz.service.HertzAccessibilityService"
+            Log.d(TAG,"Try test if accessibility service is enabled.")
+
+            val service = "net.catten.ninekeyhertz/net.catten.ninekeyhertz.service.HertzAccessibilityService"
 
             try {
                 if (Settings.Secure.getInt(context.applicationContext.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED) < 1)
