@@ -1,7 +1,10 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="net.catten.ninekeyhertz">
 
+    <!-- We need overlay permissions for displaying the cursor helper and hints -->
+<!--    <uses-permission android:name="android.permission.ACTION_MANAGE_OVERLAY_PERMISSION"/>-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application
@@ -17,7 +20,10 @@
 
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name="net.catten.ninekeyhertz.view.NineKeyHertzSettings" android:exported="true">
+        <activity
+            android:name="net.catten.ninekeyhertz.activity.NineKeyHertzSettingsActivity"
+            android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -25,21 +31,22 @@
         </activity>
 
         <service
-            android:name="net.catten.ninekeyhertz.service.HertzAccessibilityService"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:exported="true"
             android:label="@string/app_name"
+            android:name="net.catten.ninekeyhertz.service.HertzAccessibilityService"
+            android:exported="true"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:configChanges="keyboardHidden">
 
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accessibilityservice"
-                android:resource="@xml/nine_key_hertz_service_config"/>
+                android:resource="@xml/nine_key_hertz_service_config" />
         </service>
 
-        <service android:name="net.catten.ninekeyhertz.service.HertzWorkingService"/>
+<!--        <service android:name="net.catten.ninekeyhertz.service.HertzWorkingService"/>-->
 
     </application>
 </manifest>

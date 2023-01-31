@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Binder
-import android.os.Build
-import android.os.Debug
 import android.os.IBinder
 import android.util.Log
 import android.view.Gravity
@@ -17,9 +15,9 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import net.catten.ninekeyhertz.service.works.EventContext
 import net.catten.ninekeyhertz.service.works.EventHandleWorks
-import net.catten.ninekeyhertz.utils.EventMappings
 import net.catten.ninekeyhertz.R
 import net.catten.ninekeyhertz.data.*
+import net.catten.ninekeyhertz.utils.*
 
 class HertzWorkingService : Service() {
 
@@ -30,9 +28,7 @@ class HertzWorkingService : Service() {
     * */
 
     private val hertzSettings = BasicSettings()
-//    private val hertzSettings by lazy { SettingFilesManager.load<BasicSettings>(this) }
     private val listenerSettings = ListenerSettings()
-//    private val listenerSettings by lazy { SettingFilesManager.load<ListenerSettings>(this) }
 
     /*
     *
@@ -48,7 +44,7 @@ class HertzWorkingService : Service() {
 
     override fun onCreate() {
 
-        applyFloatWindowSettings()
+//        applyFloatWindowSettings()
 
 //        if (hertzSettings.disableService)
 //            toast("Hertz will waiting here until you allow it to work.")
@@ -68,9 +64,9 @@ class HertzWorkingService : Service() {
     }
 
     override fun onDestroy() {
-        removeOverlayView(getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+//        removeOverlayView(getSystemService(Context.WINDOW_SERVICE) as WindowManager)
 
-        hertzSettings.saveToFile(this)
+//        hertzSettings.saveToFile(this)
 
         toast("Hertz stop working.")
         super.onDestroy()
@@ -109,12 +105,6 @@ class HertzWorkingService : Service() {
         EventHandleWorks.dispatchHandling(eventContext)
     }
 
-    private var latestAccessibilityServiceStatus = AccessibilityServiceStatus.NONE
-    val accessibilityServiceStatus = latestAccessibilityServiceStatus
-    fun onAccessibilityServiceStatus(status: AccessibilityServiceStatus) {
-        latestAccessibilityServiceStatus = status
-    }
-
     /*
     *
     * Some controlling methods
@@ -141,23 +131,27 @@ class HertzWorkingService : Service() {
     * */
 
     var focusHintView: FrameLayout? = null
-    private val windowParams = WindowManager.LayoutParams().apply {
+    private val windowParams = WindowManagerLayoutParameters {
 
-        width = WindowManager.LayoutParams.MATCH_PARENT
-        height = WindowManager.LayoutParams.WRAP_CONTENT
+        fullScreen()
+//        params {
+//            width = WindowManager.LayoutParams.MATCH_PARENT
+//            height = WindowManager.LayoutParams.WRAP_CONTENT
+//        }
 
-        type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        else
-            WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+        typeOverlay()
 
-        flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-            .or(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
-            .or(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH)
+        useFlags(
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+//            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+        )
 
-        format = PixelFormat.TRANSLUCENT
-
-        gravity = Gravity.TOP
+        layoutParameters {
+            format = PixelFormat.TRANSLUCENT
+            gravity = Gravity.TOP
+        }
     }
 
     private fun applyFloatWindowSettings() {

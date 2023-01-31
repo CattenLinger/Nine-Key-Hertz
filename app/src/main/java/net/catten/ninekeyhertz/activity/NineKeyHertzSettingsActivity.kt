@@ -1,4 +1,4 @@
-package net.catten.ninekeyhertz.view
+package net.catten.ninekeyhertz.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -7,9 +7,8 @@ import kotlinx.coroutines.*
 import net.catten.ninekeyhertz.service.HertzAccessibilityService
 import net.catten.ninekeyhertz.R
 import net.catten.ninekeyhertz.databinding.NineKeyHertzSettingsBinding
-import kotlin.coroutines.coroutineContext
 
-class NineKeyHertzSettings : AppCompatActivity() {
+class NineKeyHertzSettingsActivity : AppCompatActivity() {
     private val isAccessibilityEnabled : Boolean
         get() = HertzAccessibilityService.isAccessibilitySettingsOn(applicationContext)
 

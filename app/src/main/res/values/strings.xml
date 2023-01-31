@@ -1,9 +1,12 @@
 <resources>
-    <string name="app_name">Nine-Key Hertz</string>
+    <string name="app_name">NineKey Hertz</string>
     <string name="description">A Hertz that guiding you on flipping phones</string>
-    <string name="hertz_window_default">Hertz is here</string>
     <string name="settings_hertz_on">Hertz is On</string>
     <string name="settings_hertz_off">Hertz is Off</string>
+
     <string name="settings_hint_hertz_state">Hertz service status</string>
     <string name="hertz_window_hint_prefix">Hertz found</string>
+
+    <string name="ui.hud.window_placeholder">Window Name</string>
+    <string name="ui.hud.hint_placeholder">Hertz is here</string>
 </resources>

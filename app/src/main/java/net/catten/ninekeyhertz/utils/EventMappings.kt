@@ -32,7 +32,7 @@ object EventMappings {
 
     }
 
-    private val reverseMapping = Event.values().map { Pair(it.value,it) }.toMap()
+    private val reverseMapping = Event.values().associateBy { it.value }
 
     fun eventOf(value : Int) : Event = reverseMapping[value]?: Event.UNKNOWN
 }
